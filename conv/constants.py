@@ -47,3 +47,8 @@ def get_script_path():
 # 중지 키워드 리스트
 def get_sell_keywords():
     return ['stop', '1', '그만', '멈춰', '아아']
+
+
+# 슬랙 봇 채널
+def get_slack_bot_channel():
+    return config['slack_bot_channel']
