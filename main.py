@@ -24,7 +24,10 @@ def working():
             # 코인 전량 매도
             conv.sell_all()
             client.chat_meMessage(channel='D01VBGPL8LB', text=":tada:")
+            counter = 0
         else:
+            if counter % 10 == 0:
+                client.chat_meMessage(channel='D01VBGPL8LB', text=":party_blob:")
             print(f'reading... count : {counter}')
         time.sleep(5)
         counter = counter + 1

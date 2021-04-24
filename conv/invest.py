@@ -42,7 +42,6 @@ def get_my_coin_info():
         buy_price = account[1]['avg_buy_price']
         balance = account[1]['balance']
         result = {market_name: [buy_price, balance, krw_balance]}
-        print(f"내 계좌 요약 정보 ::: {result}")
         return result
     else:
         return None
@@ -112,8 +111,5 @@ def order_coin(market_name="KRW-BTC", order_money=0, order_volume=0, type='bid')
     authorize_token = 'Bearer {}'.format(jwt_token)
     headers = {"Authorization": authorize_token}
 
-    print(f'현재 주문 금액은? {order_money * order_volume} order_money ::: {order_money} order_volume ::: {order_volume}')
-
     res = requests.post(conv.get_site_url() + "/v1/orders", params=query, headers=headers)
-    print(f'주문결과 ::: {res.json()}')
     return res
