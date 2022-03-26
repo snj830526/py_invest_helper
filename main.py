@@ -17,13 +17,14 @@ def working():
         bot_channel = conv.get_slack_bot_channel()
         if client is None:
             client = get_slack_client()
+        print(f'test :: {bot_channel}')
         response = client.conversations_history(channel=bot_channel)
         get_message = response['messages'][0]['text']
         print(f"""마지막 메시지 ::: {get_message}""")
         if get_message in conv.get_sell_keywords():
             # 코인 전량 매도
-            conv.sell_all()
-            client.chat_meMessage(channel=bot_channel, text=":tada:")
+            res = conv.sell_all()
+            client.chat_meMessage(channel=bot_channel, text=f":tada: {res}")
             counter = 0
         else:
             if counter % 60 == 0:

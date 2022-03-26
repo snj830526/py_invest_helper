@@ -9,6 +9,7 @@ from urllib.parse import urlencode
 # 내 계좌에 있는 코인 전부 매도(수익률에 따라 전량 매도 할지 결정하도록 변경)
 def sell_all():
     myinfo_map = get_my_coin_info()
+    res = None
 
     if myinfo_map is not None:
         # 코인명
@@ -25,12 +26,16 @@ def sell_all():
         order_type = 'ask'
 
         # 전량 매도!
-        order_coin(
+        res = order_coin(
             market_name=market,
             order_money=order_price,
             order_volume=order_volume,
-            type=order_type
+            _type=order_type
         )
+
+        print(f'전량 매도 요청 결과 :: {res}')
+
+    return res
 
 
 # 내가 가진 코인 요약 정보 조회
@@ -64,11 +69,12 @@ def get_my_account():
         'nonce': str(uuid.uuid4())
     }
 
-    jwt_token = jwt.encode(pay_load, conv.get_secret_key())
+    jwt_token = jwt.encode(pay_load, conv.get_secret_key()).decode('utf8')
     authorized_token = 'Bearer {}'.format(jwt_token)
     headers = {'Authorization': authorized_token}
 
     response = requests.request("GET", conv.get_site_url() + '/v1/accounts', headers=headers)
+    print(f'test :: {response}')
 
     return response.json()
 
@@ -86,10 +92,10 @@ def get_current_coin_price(candle):
 
 
 # 코인 주문(매수, 매도)
-def order_coin(market_name="KRW-BTC", order_money=0, order_volume=0, type='bid'):
+def order_coin(market_name="KRW-BTC", order_money=0, order_volume: float = 0.0, _type='bid'):
     query = {
         'market': market_name,
-        'side': type,
+        'side': _type,
         'volume': order_volume,
         'price': order_money,
         'ord_type': 'limit',
@@ -107,7 +113,7 @@ def order_coin(market_name="KRW-BTC", order_money=0, order_volume=0, type='bid')
         'query_hash_alg': 'SHA512',
     }
 
-    jwt_token = jwt.encode(payload, conv.get_secret_key())
+    jwt_token = jwt.encode(payload, conv.get_secret_key()).decode('utf8')
     authorize_token = 'Bearer {}'.format(jwt_token)
     headers = {"Authorization": authorize_token}
 
